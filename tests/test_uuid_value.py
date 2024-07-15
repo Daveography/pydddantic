@@ -51,3 +51,15 @@ class UUIDValueTests(TestCase):
 
         # Expect
         self.assertEqual(id, user_id)
+
+    def test_id_should_not_be_equivalent_to_unsupported_comparison_type(self):
+        # Given
+        class UserId(UUIDValue): ...
+        class UnknownType: ...
+
+        # When
+        user_id = UserId("db5b3fe1-3631-4ac4-8b91-b8333da02616")
+        other = UnknownType()
+
+        # Expect
+        self.assertNotEqual(user_id, other)

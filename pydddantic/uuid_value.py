@@ -28,4 +28,6 @@ class UUIDValue(Value[UUID], ABC):
             return self.root == other.root
         if isinstance(other, UUID):
             return self.root == other
-        return self.root == UUID(other)
+        if isinstance(other, str):
+            return self.root == UUID(other)
+        return False
