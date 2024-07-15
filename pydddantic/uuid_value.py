@@ -1,6 +1,7 @@
 from abc import ABC
 from typing_extensions import Annotated, Self
 from uuid import UUID, uuid4
+
 from pydantic import BeforeValidator
 
 from .value import Value
@@ -22,6 +23,13 @@ class UUIDValue(Value[UUID], ABC):
             Self: A UUID Value Object
         """
         return cls(uuid4())
+
+    @property
+    def value(self) -> UUID:
+        """
+        Get the UUID value.
+        """
+        return self.root  # type: ignore
 
     def __eq__(self, other: str | UUID | Value[UUID]) -> bool:
         if isinstance(other, Value):

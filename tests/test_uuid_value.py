@@ -1,6 +1,8 @@
 from unittest import TestCase
 from uuid import UUID
 
+from pydantic import UUID4, BaseModel
+
 from pydddantic import UUIDValue
 
 
@@ -55,6 +57,7 @@ class UUIDValueTests(TestCase):
     def test_id_should_not_be_equivalent_to_unsupported_comparison_type(self):
         # Given
         class UserId(UUIDValue): ...
+
         class UnknownType: ...
 
         # When
@@ -63,3 +66,18 @@ class UUIDValueTests(TestCase):
 
         # Expect
         self.assertNotEqual(user_id, other)
+
+    def test_id_value_should_be_compatible_with_uuid4(self):
+        # Given
+        class UserId(UUIDValue): ...
+
+        class User(BaseModel):
+            id: UUID4
+
+        user_id = UserId("db5b3fe1-3631-4ac4-8b91-b8333da02616")
+
+        # When
+        user = User(id=user_id.value)
+
+        # Expect
+        self.assertEqual(user_id, user.id)
