@@ -1,3 +1,4 @@
+from typing_extensions import Hashable
 from unittest import TestCase
 from uuid import UUID
 
@@ -21,6 +22,7 @@ class UUIDValueTests(TestCase):
     def test_should_create_id_from_string(self):
         # Given
         class UserId(UUIDValue): ...
+
         id_str = "db5b3fe1-3631-4ac4-8b91-b8333da02616"
 
         # When
@@ -32,6 +34,7 @@ class UUIDValueTests(TestCase):
     def test_should_create_id_from_uuid(self):
         # Given
         class UserId(UUIDValue): ...
+
         uuid = UUID("db5b3fe1-3631-4ac4-8b91-b8333da02616")
 
         # When
@@ -70,6 +73,7 @@ class UUIDValueTests(TestCase):
     def test_same_ids_of_different_classes_should_not_be_equivalent(self):
         # Given
         class UserId(UUIDValue): ...
+
         class AccountId(UUIDValue): ...
 
         id = "db5b3fe1-3631-4ac4-8b91-b8333da02616"
@@ -84,6 +88,7 @@ class UUIDValueTests(TestCase):
     def test_different_classes_should_be_different_instances(self):
         # Given
         class UserId(UUIDValue): ...
+
         class AccountId(UUIDValue): ...
 
         # When
@@ -133,3 +138,13 @@ class UUIDValueTests(TestCase):
 
         # Expect
         self.assertEqual(user_id, user.id)
+
+    def test_id_should_be_hashable(self):
+        # Given
+        class UserId(UUIDValue): ...
+
+        # When
+        value = UserId("db5b3fe1-3631-4ac4-8b91-b8333da02616")
+
+        # Expect
+        self.assertIsInstance(value, Hashable)

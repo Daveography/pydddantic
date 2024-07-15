@@ -31,3 +31,6 @@ class UUIDValue(UUID, ABC):
         if isinstance(other, UUIDValue) and not isinstance(other, type(self)):
             return False
         return super().__eq__(other)
+
+    def __hash__(self):
+        return hash(self.int)
