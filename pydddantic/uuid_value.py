@@ -1,41 +1,33 @@
 from abc import ABC
-from typing_extensions import Annotated, Self
+from typing_extensions import Self
 from uuid import UUID, uuid4
 
-from pydantic import BeforeValidator
+from pydantic import GetCoreSchemaHandler
+from pydantic_core import CoreSchema, core_schema
 
-from .value import Value
 
-
-class UUIDValue(Value[UUID], ABC):
-    """
-    Abstract base class for a UUID Value Object. Implements a `generate()` class method to generate a new Id.
-    """
-
-    root: Annotated[str | UUID, BeforeValidator(lambda v: UUID(v) if not isinstance(v, UUID) else v)]
+class UUIDValue(UUID, ABC):
+    def __init__(self, uuid: str | UUID):
+        if isinstance(uuid, UUID):
+            super().__init__(bytes=uuid.bytes)
+        else:
+            super().__init__(uuid)
 
     @classmethod
     def generate(cls) -> Self:
-        """
-        Generate a new UUID Value Object.
-
-        Returns:
-            Self: A UUID Value Object
-        """
         return cls(uuid4())
 
-    @property
-    def value(self) -> UUID:
-        """
-        Get the UUID value.
-        """
-        return self.root  # type: ignore
+    @classmethod
+    def __get_pydantic_core_schema__(cls, source_type: type[object], handler: GetCoreSchemaHandler) -> CoreSchema:
+        if issubclass(source_type, UUID):
+            # Accept the UUID as already validated by its own type
+            # TODO: Not sure this is the correct way to do this, but it works for now.
+            return core_schema.no_info_plain_validator_function(lambda x: x)
+        return core_schema.no_info_plain_validator_function(UUID)
 
-    def __eq__(self, other: str | UUID | Value[UUID]) -> bool:
-        if isinstance(other, Value):
-            return self.root == other.root
-        if isinstance(other, UUID):
-            return self.root == other
+    def __eq__(self, other: str | UUID) -> bool:
         if isinstance(other, str):
-            return self.root == UUID(other)
-        return False
+            return self == UUID(other)
+        if isinstance(other, UUIDValue) and not isinstance(other, type(self)):
+            return False
+        return super().__eq__(other)

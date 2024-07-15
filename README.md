@@ -286,7 +286,7 @@ These classes are not defined by Domain-Driven Design practices, but exist to he
 
 ### `UUIDValue`
 
-A [`Value`](#values) class for creating UUID Value Objects. Implements a `generate()` class method for creating new Ids.
+A helper class for creating UUID Value Objects that can be instantiated from and compared to strings and `uuid.UUID`, but not other subclasses of `UUIDValue` even if they share a value. Implements a `generate()` class method for creating new Ids.
 
 ```python
 from pydddantic import UUIDValue
@@ -300,9 +300,21 @@ d8601f81-5eb3-4b14-b391-32bc8ddfc898
 """
 
 magpie_id = BirdId("c5d51894-939d-4576-9546-e9151e44f408")
-print(magpie_id)  
+print(magpie_id)
 """
 c5d51894-939d-4576-9546-e9151e44f408
+"""
+
+print(magpie_id == "c5d51894-939d-4576-9546-e9151e44f408")
+"""
+True
+"""
+
+class WhaleId(UUIDValue): ...
+humpback_id = WhaleId("c5d51894-939d-4576-9546-e9151e44f408")
+print(humpback_id == magpie_id)
+"""
+False
 """
 ```
 
