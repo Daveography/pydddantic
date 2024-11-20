@@ -19,11 +19,23 @@ class UUIDValue(UUID, ABC):
 
     @classmethod
     def __get_pydantic_core_schema__(cls, source_type: type[object], handler: GetCoreSchemaHandler) -> CoreSchema:
-        if issubclass(source_type, UUID):
-            # Accept the UUID as already validated by its own type
-            # TODO: Not sure this is the correct way to do this, but it works for now.
-            return core_schema.no_info_plain_validator_function(lambda x: x)
-        return core_schema.no_info_plain_validator_function(UUID)
+        # TODO: Not sure this is the correct way to do this, but it works for now.
+        return core_schema.json_or_python_schema(
+            json_schema=core_schema.str_schema(),
+            python_schema=core_schema.union_schema(
+                [
+                    core_schema.is_instance_schema(UUID),
+                    core_schema.chain_schema(
+                        [
+                            core_schema.str_schema(),
+                            # Accept the UUID as already validated by its own type
+                            core_schema.no_info_plain_validator_function(lambda x: x),
+                        ]
+                    ),
+                ]
+            ),
+            serialization=core_schema.plain_serializer_function_ser_schema(lambda x: str(x)),
+        )
 
     def __eq__(self, other: str | UUID) -> bool:
         if isinstance(other, str):
