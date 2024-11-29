@@ -665,11 +665,13 @@ id=BirdId(root=UUID('426ba7dc-78f7-4bfa-9fd2-2d7fdcc2d8e6')) current_coordinates
 """
 
 my_bird.migrate(new_coordinates=(53.631625, -112.898750))
+print(my_bird._state)
 """
 id=BirdId(root=UUID('426ba7dc-78f7-4bfa-9fd2-2d7fdcc2d8e6')) current_coordinates=Coordinates(root=(53.631625, -112.89875)) nest_coordinates=None nest_type=None
 """
 
 my_bird.nest(coordinates=(53.631625, -112.898750), nest_type="shrub")
+print(my_bird._state)
 """
 print(my_bird._state)
 id=BirdId(root=UUID('426ba7dc-78f7-4bfa-9fd2-2d7fdcc2d8e6')) current_coordinates=Coordinates(root=(53.631625, -112.89875)) nest_coordinates=Coordinates(root=(53.631625, -112.89875)) nest_type='shrub'
