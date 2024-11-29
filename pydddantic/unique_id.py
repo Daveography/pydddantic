@@ -6,7 +6,7 @@ from pydantic import GetCoreSchemaHandler
 from pydantic_core import CoreSchema, core_schema
 
 
-class UUIDValue(UUID, ABC):
+class UniqueId(UUID, ABC):
     def __init__(self, uuid: str | UUID):
         if isinstance(uuid, UUID):
             super().__init__(bytes=uuid.bytes)
@@ -40,7 +40,7 @@ class UUIDValue(UUID, ABC):
     def __eq__(self, other: str | UUID) -> bool:
         if isinstance(other, str):
             return self == UUID(other)
-        if isinstance(other, UUIDValue) and not isinstance(other, type(self)):
+        if isinstance(other, UniqueId) and not isinstance(other, type(self)):
             return False
         return super().__eq__(other)
 

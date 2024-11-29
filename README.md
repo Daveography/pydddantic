@@ -12,7 +12,7 @@ A Pydantic-Based Domain-Driven Design Framework
   - [`Entity`](#entity)
   - [`AggregateRoot`](#aggregateroot)
   - [Additional Classes](#additional-classes)
-    - [`UUIDValue`](#uuidvalue)
+    - [`UniqueId`](#UniqueId)
     - [`ImmutableEntity`](#immutableentity)
   - [Serialization](#serialization)
 - [Event-Driven Architecture](#event-driven-architecture)
@@ -242,14 +242,14 @@ except ValidationError as e:
 
 This class is simply a subclass of [`Entity`](#entity), but exists to enable easy identification of your Aggregate Root entities.
 
-This example updates the [`Entity`](#entity) example, but makes `Bird` our `AggregateRoot` (and uses [`UUIDValue`](#uuidvalue)):
+This example updates the [`Entity`](#entity) example, but makes `Bird` our `AggregateRoot` (and uses [`UniqueId`](#UniqueId)):
 
 ```python
 from typing_extensions import Annotated
 from pydantic import Field, StringConstraints
-from pydddantic import AggregateRoot, Entity, UUIDValue, Value, ValueObject
+from pydddantic import AggregateRoot, Entity, UniqueId, Value, ValueObject
 
-class BirdId(UUIDValue): ...
+class BirdId(UniqueId): ...
 
 class BirdName(ValueObject):
     common_name: str
@@ -284,14 +284,14 @@ id=BirdId(root=UUID('3863dee4-1c2c-4eb9-9dfb-e0e9159405aa')) name=BirdName(commo
 
 These classes are not defined by Domain-Driven Design practices, but exist to help in some relatively common use-cases.
 
-### `UUIDValue`
+### `UniqueId`
 
-A helper class for creating UUID Value Objects that can be instantiated from and compared to strings and `uuid.UUID`, but not other subclasses of `UUIDValue` even if they share a value. Implements a `generate()` class method for creating new Ids.
+A helper class for creating UUID Value Objects that can be instantiated from and compared to strings and `uuid.UUID`, but not other subclasses of `UniqueId` even if they share a value. Implements a `generate()` class method for creating new Ids.
 
 ```python
-from pydddantic import UUIDValue
+from pydddantic import UniqueId
 
-class BirdId(UUIDValue): ...
+class BirdId(UniqueId): ...
 
 flicker_id = BirdId.generate()
 print(flicker_id)
@@ -310,7 +310,7 @@ print(magpie_id == "c5d51894-939d-4576-9546-e9151e44f408")
 True
 """
 
-class WhaleId(UUIDValue): ...
+class WhaleId(UniqueId): ...
 humpback_id = WhaleId("c5d51894-939d-4576-9546-e9151e44f408")
 print(humpback_id == magpie_id)
 """
@@ -570,10 +570,10 @@ Additionally, derived classes should also implement:
 ```python
 from functools import singledispatchmethod
 from typing_extensions import Self
-from pydddantic import AggregateRoot, Event, EventSourcedAggregate, MessageBus, UUIDValue, Value
+from pydddantic import AggregateRoot, Event, EventSourcedAggregate, MessageBus, UniqueId, Value
 
 # Value Objects
-class BirdId(UUIDValue): ...
+class BirdId(UniqueId): ...
 
 class Coordinates(Value[tuple[float, float]]): ...
 

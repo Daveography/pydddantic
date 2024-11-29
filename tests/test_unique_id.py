@@ -4,13 +4,13 @@ from uuid import UUID
 
 from pydantic import UUID4, BaseModel
 
-from pydddantic import UUIDValue
+from pydddantic import UniqueId
 
 
-class UUIDValueTests(TestCase):
+class UniqueIdTests(TestCase):
     def test_should_generate_a_new_id(self):
         # Given
-        class UserId(UUIDValue): ...
+        class UserId(UniqueId): ...
 
         # When
         user_id = UserId.generate()
@@ -21,7 +21,7 @@ class UUIDValueTests(TestCase):
 
     def test_should_create_id_from_string(self):
         # Given
-        class UserId(UUIDValue): ...
+        class UserId(UniqueId): ...
 
         id_str = "db5b3fe1-3631-4ac4-8b91-b8333da02616"
 
@@ -33,7 +33,7 @@ class UUIDValueTests(TestCase):
 
     def test_should_create_id_from_uuid(self):
         # Given
-        class UserId(UUIDValue): ...
+        class UserId(UniqueId): ...
 
         uuid = UUID("db5b3fe1-3631-4ac4-8b91-b8333da02616")
 
@@ -45,7 +45,7 @@ class UUIDValueTests(TestCase):
 
     def test_same_ids_should_be_equivalent(self):
         # Given
-        class UserId(UUIDValue): ...
+        class UserId(UniqueId): ...
 
         id = "db5b3fe1-3631-4ac4-8b91-b8333da02616"
 
@@ -58,7 +58,7 @@ class UUIDValueTests(TestCase):
 
     def test_different_ids_should_not_be_equivalent(self):
         # Given
-        class UserId(UUIDValue): ...
+        class UserId(UniqueId): ...
 
         id1 = "db5b3fe1-3631-4ac4-8b91-b8333da02616"
         id2 = "a40e6a48-2136-485b-9961-3269e6f83a97"
@@ -72,9 +72,9 @@ class UUIDValueTests(TestCase):
 
     def test_same_ids_of_different_classes_should_not_be_equivalent(self):
         # Given
-        class UserId(UUIDValue): ...
+        class UserId(UniqueId): ...
 
-        class AccountId(UUIDValue): ...
+        class AccountId(UniqueId): ...
 
         id = "db5b3fe1-3631-4ac4-8b91-b8333da02616"
 
@@ -87,9 +87,9 @@ class UUIDValueTests(TestCase):
 
     def test_different_classes_should_be_different_instances(self):
         # Given
-        class UserId(UUIDValue): ...
+        class UserId(UniqueId): ...
 
-        class AccountId(UUIDValue): ...
+        class AccountId(UniqueId): ...
 
         # When
         user_id = UserId("db5b3fe1-3631-4ac4-8b91-b8333da02616")
@@ -101,7 +101,7 @@ class UUIDValueTests(TestCase):
 
     def test_id_should_be_equivalent_to_string(self):
         # Given
-        class UserId(UUIDValue): ...
+        class UserId(UniqueId): ...
 
         id = "db5b3fe1-3631-4ac4-8b91-b8333da02616"
 
@@ -113,7 +113,7 @@ class UUIDValueTests(TestCase):
 
     def test_id_should_not_be_equivalent_to_unsupported_comparison_type(self):
         # Given
-        class UserId(UUIDValue): ...
+        class UserId(UniqueId): ...
 
         class UnknownType: ...
 
@@ -126,7 +126,7 @@ class UUIDValueTests(TestCase):
 
     def test_id_value_should_be_compatible_with_uuid4(self):
         # Given
-        class UserId(UUIDValue): ...
+        class UserId(UniqueId): ...
 
         class User(BaseModel):
             id: UUID4
@@ -141,10 +141,18 @@ class UUIDValueTests(TestCase):
 
     def test_id_should_be_hashable(self):
         # Given
-        class UserId(UUIDValue): ...
+        class UserId(UniqueId): ...
 
         # When
         value = UserId("db5b3fe1-3631-4ac4-8b91-b8333da02616")
 
         # Expect
         self.assertIsInstance(value, Hashable)
+
+    def test_uuid_value_should_be_deprecated(self):
+        # Given
+        from pydddantic import UUIDValue
+
+        # Expect
+        with self.assertWarns(DeprecationWarning):
+            class UserId(UUIDValue): ...
