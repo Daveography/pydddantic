@@ -12,7 +12,7 @@ A Pydantic-Based Domain-Driven Design Framework
   - [`Entity`](#entity)
   - [`AggregateRoot`](#aggregateroot)
   - [Additional Classes](#additional-classes)
-    - [`UniqueId`](#UniqueId)
+    - [`UniqueId`](#uniqueid)
     - [`ImmutableEntity`](#immutableentity)
   - [Serialization](#serialization)
 - [Event-Driven Architecture](#event-driven-architecture)
@@ -21,6 +21,7 @@ A Pydantic-Based Domain-Driven Design Framework
   - [`MessageBus`](#messagebus)
 - [Aggregates \& Event Sourcing (A+ES)](#aggregates--event-sourcing-aes)
   - [`EventSourcedAggregate`](#eventsourcedaggregate)
+  - [Contributing](#contributing)
 - [Sources and Credits](#sources-and-credits)
 
 # Introduction
@@ -33,7 +34,9 @@ Note that this documentation does not go into detail about Domain Driven Design 
 
 # Installation
 
-TBD
+```bash
+pip install pydddantic
+```
 
 # Base Classes
 
@@ -678,8 +681,24 @@ id=BirdId(root=UUID('426ba7dc-78f7-4bfa-9fd2-2d7fdcc2d8e6')) current_coordinates
 """
 ```
 
+
+## Contributing
+
+This package utilizes [Poetry](https://python-poetry.org) for dependency management and [pre-commit](https://pre-commit.com/) for ensuring code formatting is automatically done and code style checks are performed.
+
+```bash
+git clone https://github.com/Daveography/pydddantic.git pydddantic
+cd pydddantic
+pip install poetry
+poetry install
+poetry run pre-commit install
+poetry run pre-commit autoupdate
+```
+
+
 # Sources and Credits
 
 - Eric Evans ([Domain-Driven Design: Tackling Complexity in the Heart of Software](https://www.dddcommunity.org/book/evans_2003/))
 - Vaughn Vernon ([Implementing Domain-Driven Design](https://www.dddcommunity.org/book/implementing-domain-driven-design-by-vaughn-vernon/))
 - Harry J.W. Percival & Bob Gregory ([Architecture Patterns with Python](https://www.cosmicpython.com/))
+- The entire [Pydantic Team](https://docs.pydantic.dev/latest/pydantic_people/)
